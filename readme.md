@@ -13,4 +13,16 @@
         open:true,
     },
 
-    ###webapack  code Splitting
+
+### 代码分割优化  code Splitting
+1. 通过合理的代码分割提升性能
+
+2. 代码分割和webpack 无关
+
+3. 同步代码分割 只需要在：
+    optimization:{
+         splitChunks:{
+             chunks:'all'
+         }
+     },
+4.异步代码分割 无需做任何配置会自动配置

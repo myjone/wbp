@@ -52,8 +52,22 @@
 // Tree Shaking,只支持 ES Module
 // import {add} from "./math.js"
 // add(1,2)
-console.log(_.join(['a','b','c'],"***"))
-console.log(_.join(['a', 'b', 'c'], "***"))
-console.log(_.join(['a', 'b', 'c'], "***"))
-console.log(_.join(['a', 'b', 'c'], "***"))
-console.log(_.join(['a','b','c'],"***"))
+
+// import _ from "loadsh"
+// console.log(_.join(['a','b','c'],"***"))
+// console.log(_.join(['a', 'b', 'c'], "***"))
+
+// function getComponent(){
+//     return import(/*webpackChunkName:"loadsh"*/ 'loadsh').then(({ default:_ })=>{
+//        var element = document.createElement('div')
+//        element.innerHTML = _.join(['dell','lee'],'-')
+//        return element;
+//     })
+// }
+
+// getComponent().then(element =>{
+//     document.body.appendChild(element)
+// })
+
+import test from "./a.js"
+console.log(test.name)

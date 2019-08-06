@@ -1,4 +1,54 @@
 /******/ (function(modules) { // webpackBootstrap
+/******/ 	// install a JSONP callback for chunk loading
+/******/ 	function webpackJsonpCallback(data) {
+/******/ 		var chunkIds = data[0];
+/******/ 		var moreModules = data[1];
+/******/ 		var executeModules = data[2];
+/******/
+/******/ 		// add "moreModules" to the modules object,
+/******/ 		// then flag all "chunkIds" as loaded and fire callback
+/******/ 		var moduleId, chunkId, i = 0, resolves = [];
+/******/ 		for(;i < chunkIds.length; i++) {
+/******/ 			chunkId = chunkIds[i];
+/******/ 			if(Object.prototype.hasOwnProperty.call(installedChunks, chunkId) && installedChunks[chunkId]) {
+/******/ 				resolves.push(installedChunks[chunkId][0]);
+/******/ 			}
+/******/ 			installedChunks[chunkId] = 0;
+/******/ 		}
+/******/ 		for(moduleId in moreModules) {
+/******/ 			if(Object.prototype.hasOwnProperty.call(moreModules, moduleId)) {
+/******/ 				modules[moduleId] = moreModules[moduleId];
+/******/ 			}
+/******/ 		}
+/******/ 		if(parentJsonpFunction) parentJsonpFunction(data);
+/******/
+/******/ 		while(resolves.length) {
+/******/ 			resolves.shift()();
+/******/ 		}
+/******/
+/******/ 		// add entry modules from loaded chunk to deferred list
+/******/ 		deferredModules.push.apply(deferredModules, executeModules || []);
+/******/
+/******/ 		// run deferred modules when all chunks ready
+/******/ 		return checkDeferredModules();
+/******/ 	};
+/******/ 	function checkDeferredModules() {
+/******/ 		var result;
+/******/ 		for(var i = 0; i < deferredModules.length; i++) {
+/******/ 			var deferredModule = deferredModules[i];
+/******/ 			var fulfilled = true;
+/******/ 			for(var j = 1; j < deferredModule.length; j++) {
+/******/ 				var depId = deferredModule[j];
+/******/ 				if(installedChunks[depId] !== 0) fulfilled = false;
+/******/ 			}
+/******/ 			if(fulfilled) {
+/******/ 				deferredModules.splice(i--, 1);
+/******/ 				result = __webpack_require__(__webpack_require__.s = deferredModule[0]);
+/******/ 			}
+/******/ 		}
+/******/
+/******/ 		return result;
+/******/ 	}
 /******/ 	function hotDisposeChunk(chunkId) {
 /******/ 		delete installedChunks[chunkId];
 /******/ 	}
@@ -63,7 +113,7 @@
 /******/
 /******/ 	var hotApplyOnUpdate = true;
 /******/ 	// eslint-disable-next-line no-unused-vars
-/******/ 	var hotCurrentHash = "666fbe110479431fad57";
+/******/ 	var hotCurrentHash = "b577fb54ba1d52fc27d7";
 /******/ 	var hotRequestTimeout = 10000;
 /******/ 	var hotCurrentModuleData = {};
 /******/ 	var hotCurrentChildModule;
@@ -258,7 +308,7 @@
 /******/ 				};
 /******/ 			});
 /******/ 			hotUpdate = {};
-/******/ 			var chunkId = "main";
+/******/ 			for(var chunkId in installedChunks)
 /******/ 			// eslint-disable-next-line no-lone-blocks
 /******/ 			{
 /******/ 				/*globals chunkId */
@@ -706,6 +756,15 @@
 /******/ 	// The module cache
 /******/ 	var installedModules = {};
 /******/
+/******/ 	// object to store loaded and loading chunks
+/******/ 	// undefined = chunk not loaded, null = chunk preloaded/prefetched
+/******/ 	// Promise = chunk loading, 0 = chunk loaded
+/******/ 	var installedChunks = {
+/******/ 		"main": 0
+/******/ 	};
+/******/
+/******/ 	var deferredModules = [];
+/******/
 /******/ 	// The require function
 /******/ 	function __webpack_require__(moduleId) {
 /******/
@@ -789,23 +848,18 @@
 /******/ 	// __webpack_hash__
 /******/ 	__webpack_require__.h = function() { return hotCurrentHash; };
 /******/
+/******/ 	var jsonpArray = window["webpackJsonp"] = window["webpackJsonp"] || [];
+/******/ 	var oldJsonpFunction = jsonpArray.push.bind(jsonpArray);
+/******/ 	jsonpArray.push = webpackJsonpCallback;
+/******/ 	jsonpArray = jsonpArray.slice();
+/******/ 	for(var i = 0; i < jsonpArray.length; i++) webpackJsonpCallback(jsonpArray[i]);
+/******/ 	var parentJsonpFunction = oldJsonpFunction;
 /******/
-/******/ 	// Load entry module and return exports
-/******/ 	return hotCreateRequire("./src/index.js")(__webpack_require__.s = "./src/index.js");
+/******/
+/******/ 	// add entry module to deferred list
+/******/ 	deferredModules.push(["./src/index.js","vendors~main","default~main"]);
+/******/ 	// run deferred modules when ready
+/******/ 	return checkDeferredModules();
 /******/ })
 /************************************************************************/
-/******/ ({
-
-/***/ "./src/index.js":
-/*!**********************!*\
-  !*** ./src/index.js ***!
-  \**********************/
-/*! no static exports found */
-/*! all exports used */
-/***/ (function(module, exports) {
-
-eval("//import \"@babel/polyfill\";\n// import Header from \"./header\"\n// import CreateAvator from \"./createAvator\"\n// import style from './css/index.scss'\n// import TestImage from \"./images/test.jpg\"\n// new Header();\n// var img = new Image();\n// img.src = TestImage;\n// img.classList.add(style.testImage)\n// var root = document.getElementById('root');\n// root.append(img)\n// CreateAvator();\n// import \"./css/index.scss\"\n// var root = document.getElementById('root');\n// root.innerHTML = '<div class=\" iconfont iconhuazhuangshui\"></div>'\n// import \"./css/index.scss\"\n// var btn = document.createElement('button')\n// btn.innerHTML=\"新增\"\n// document.body.appendChild(btn)\n// btn.onclick = function(){\n//     var div = document.createElement('div');\n//     div.innerHTML = \"item\";\n//     document.body.appendChild(div)\n// }\n// import \"./css/index.scss\"\n// import count from \"./counter\"\n// import number from \"./number\"\n// count();\n// number();\n// if(module.hot){\n//     module.hot.accept('./number',()=>{\n//         document.body.removeChild(document.getElementById('number'))\n//         number()\n//     })\n// }\n//babel\n// const arr = [\n//     new Promise(()=>{}),\n//     new Promise(() => { }),\n// ]\n// arr.map(item=>{\n//     console.log(item)\n// })\n// Tree Shaking,只支持 ES Module\n// import {add} from \"./math.js\"\n// add(1,2)\nconsole.log(_.join(['a', 'b', 'c'], \"***\"));\nconsole.log(_.join(['a', 'b', 'c'], \"***\"));\nconsole.log(_.join(['a', 'b', 'c'], \"***\"));\nconsole.log(_.join(['a', 'b', 'c'], \"***\"));\nconsole.log(_.join(['a', 'b', 'c'], \"***\"));//# sourceURL=[module]\n//# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJmaWxlIjoiLi9zcmMvaW5kZXguanMuanMiLCJzb3VyY2VzIjpbIndlYnBhY2s6Ly8vLi9zcmMvaW5kZXguanM/YjYzNSJdLCJzb3VyY2VzQ29udGVudCI6WyIvL2ltcG9ydCBcIkBiYWJlbC9wb2x5ZmlsbFwiO1xyXG4vLyBpbXBvcnQgSGVhZGVyIGZyb20gXCIuL2hlYWRlclwiXHJcbi8vIGltcG9ydCBDcmVhdGVBdmF0b3IgZnJvbSBcIi4vY3JlYXRlQXZhdG9yXCJcclxuLy8gaW1wb3J0IHN0eWxlIGZyb20gJy4vY3NzL2luZGV4LnNjc3MnXHJcbi8vIGltcG9ydCBUZXN0SW1hZ2UgZnJvbSBcIi4vaW1hZ2VzL3Rlc3QuanBnXCJcclxuLy8gbmV3IEhlYWRlcigpO1xyXG4vLyB2YXIgaW1nID0gbmV3IEltYWdlKCk7XHJcbi8vIGltZy5zcmMgPSBUZXN0SW1hZ2U7XHJcbi8vIGltZy5jbGFzc0xpc3QuYWRkKHN0eWxlLnRlc3RJbWFnZSlcclxuLy8gdmFyIHJvb3QgPSBkb2N1bWVudC5nZXRFbGVtZW50QnlJZCgncm9vdCcpO1xyXG4vLyByb290LmFwcGVuZChpbWcpXHJcbi8vIENyZWF0ZUF2YXRvcigpO1xyXG4vLyBpbXBvcnQgXCIuL2Nzcy9pbmRleC5zY3NzXCJcclxuLy8gdmFyIHJvb3QgPSBkb2N1bWVudC5nZXRFbGVtZW50QnlJZCgncm9vdCcpO1xyXG4vLyByb290LmlubmVySFRNTCA9ICc8ZGl2IGNsYXNzPVwiIGljb25mb250IGljb25odWF6aHVhbmdzaHVpXCI+PC9kaXY+J1xyXG5cclxuXHJcblxyXG4vLyBpbXBvcnQgXCIuL2Nzcy9pbmRleC5zY3NzXCJcclxuLy8gdmFyIGJ0biA9IGRvY3VtZW50LmNyZWF0ZUVsZW1lbnQoJ2J1dHRvbicpXHJcbi8vIGJ0bi5pbm5lckhUTUw9XCLmlrDlop5cIlxyXG4vLyBkb2N1bWVudC5ib2R5LmFwcGVuZENoaWxkKGJ0bilcclxuLy8gYnRuLm9uY2xpY2sgPSBmdW5jdGlvbigpe1xyXG4vLyAgICAgdmFyIGRpdiA9IGRvY3VtZW50LmNyZWF0ZUVsZW1lbnQoJ2RpdicpO1xyXG4vLyAgICAgZGl2LmlubmVySFRNTCA9IFwiaXRlbVwiO1xyXG4vLyAgICAgZG9jdW1lbnQuYm9keS5hcHBlbmRDaGlsZChkaXYpXHJcbi8vIH1cclxuLy8gaW1wb3J0IFwiLi9jc3MvaW5kZXguc2Nzc1wiXHJcbi8vIGltcG9ydCBjb3VudCBmcm9tIFwiLi9jb3VudGVyXCJcclxuLy8gaW1wb3J0IG51bWJlciBmcm9tIFwiLi9udW1iZXJcIlxyXG4vLyBjb3VudCgpO1xyXG4vLyBudW1iZXIoKTtcclxuLy8gaWYobW9kdWxlLmhvdCl7XHJcbi8vICAgICBtb2R1bGUuaG90LmFjY2VwdCgnLi9udW1iZXInLCgpPT57XHJcbiAgICAgICAgXHJcbi8vICAgICAgICAgZG9jdW1lbnQuYm9keS5yZW1vdmVDaGlsZChkb2N1bWVudC5nZXRFbGVtZW50QnlJZCgnbnVtYmVyJykpXHJcbi8vICAgICAgICAgbnVtYmVyKClcclxuLy8gICAgIH0pXHJcbi8vIH1cclxuXHJcbi8vYmFiZWxcclxuXHJcbi8vIGNvbnN0IGFyciA9IFtcclxuLy8gICAgIG5ldyBQcm9taXNlKCgpPT57fSksXHJcbi8vICAgICBuZXcgUHJvbWlzZSgoKSA9PiB7IH0pLFxyXG4vLyBdXHJcblxyXG4vLyBhcnIubWFwKGl0ZW09PntcclxuLy8gICAgIGNvbnNvbGUubG9nKGl0ZW0pXHJcbi8vIH0pXHJcblxyXG4vLyBUcmVlIFNoYWtpbmcs5Y+q5pSv5oyBIEVTIE1vZHVsZVxyXG4vLyBpbXBvcnQge2FkZH0gZnJvbSBcIi4vbWF0aC5qc1wiXHJcbi8vIGFkZCgxLDIpXHJcbmNvbnNvbGUubG9nKF8uam9pbihbJ2EnLCdiJywnYyddLFwiKioqXCIpKVxyXG5jb25zb2xlLmxvZyhfLmpvaW4oWydhJywgJ2InLCAnYyddLCBcIioqKlwiKSlcclxuY29uc29sZS5sb2coXy5qb2luKFsnYScsICdiJywgJ2MnXSwgXCIqKipcIikpXHJcbmNvbnNvbGUubG9nKF8uam9pbihbJ2EnLCAnYicsICdjJ10sIFwiKioqXCIpKVxyXG5jb25zb2xlLmxvZyhfLmpvaW4oWydhJywnYicsJ2MnXSxcIioqKlwiKSlcclxuIl0sIm1hcHBpbmdzIjoiQUFBQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFJQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUVBO0FBQ0E7QUFDQTtBQUNBO0FBRUE7QUFFQTtBQUNBO0FBQ0E7QUFDQTtBQUVBO0FBQ0E7QUFDQTtBQUVBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0EiLCJzb3VyY2VSb290IjoiIn0=\n//# sourceURL=webpack-internal:///./src/index.js\n");
-
-/***/ })
-
-/******/ });
+/******/ ([]);

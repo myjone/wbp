@@ -4,7 +4,6 @@ const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 const webpack = require('webpack')
 module.exports = {
     entry: {
-        loadsh:'./src/loadsh.js',
         main: './src/index.js',
     },
     module: {
@@ -65,6 +64,31 @@ module.exports = {
         }),
         new CleanWebpackPlugin(),
     ],
+    optimization:{
+        splitChunks: {
+            chunks: 'all',
+            minSize:30000,
+            maxSize: 0,  //50kx ,loadsh 1mb
+            minChunks: 1,
+            maxAsyncRequests: 5,
+            maxInitialRequests: 3,
+            automaticNameDelimiter: '~',
+            automaticNameMaxLength: 30,
+            name: true,
+            cacheGroups: {
+                vendors:{
+                    test: /[\\/]node_modules[\\/]/,
+                    priority: -10,
+                    filename:"venders.js",
+                },
+                default:{
+                    priority: -20,
+                    reuseExistingChunk: true,
+                    filename:'common.js'
+                },
+            }
+        }
+    },
     output: {
         // publicPath:'http/cdn.com/',
         filename: '[name].js',
